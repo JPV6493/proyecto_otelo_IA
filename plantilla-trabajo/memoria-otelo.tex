@@ -1,0 +1,205 @@
+\documentclass[conference,a4paper]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[kw]{pseudo}
+\usepackage{booktabs}
+\usepackage{cite}
+
+\def\abstractname{Resumen}
+\def\IEEEkeywordsname{Palabras clave}
+\def\refname{Referencias}
+\def\figurename{Fig.}
+\def\tablename{TABLA}
+
+\begin{document}
+
+\title{Aprendizaje de una funcion de valor para jugar a Otelo con UCT}
+
+\author{
+  \IEEEauthorblockN{Nombre Apellido1 Apellido2}
+  \IEEEauthorblockA{
+    \textit{Dpto. Ciencias de la Computacion e Inteligencia Artificial}\\
+    \textit{Universidad de Sevilla}\\
+    Sevilla, Espana\\
+    usuario@alum.us.es}
+}
+
+\maketitle
+
+\begin{abstract}
+Este trabajo presenta el desarrollo de un agente inteligente para el juego de
+Otelo mediante la combinacion de Monte Carlo Tree Search, la regla UCT y una red
+neuronal de valor. El objetivo es obtener un jugador capaz de seleccionar
+movimientos competitivos sin usar una heuristica manual como evaluador principal.
+
+La implementacion incluye el motor completo del juego, varios agentes de
+referencia, generacion de datos por autojuego, entrenamiento supervisado de una
+red neuronal y una bateria de experimentos entre jugadores. Los resultados
+definitivos deben obtenerse ejecutando los torneos indicados en el repositorio y
+sustituyendo las tablas de ejemplo por las mediciones finales.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Otelo, Reversi, busqueda adversaria, Monte Carlo Tree Search, UCT, redes
+neuronales, aprendizaje supervisado.
+\end{IEEEkeywords}
+
+\section{Introduccion}
+
+Otelo, tambien conocido como Reversi, es un juego determinista, de suma cero y
+con informacion perfecta. Estas propiedades lo convierten en un dominio adecuado
+para estudiar tecnicas de busqueda adversaria y aprendizaje automatico. Aunque
+el espacio de estados de Otelo es menor que el de Go, sigue siendo demasiado
+grande para resolverlo exhaustivamente durante una partida real.
+
+El objetivo del trabajo es implementar un agente basado en Monte Carlo Tree
+Search (MCTS) con seleccion Upper Confidence bounds applied to Trees (UCT). La
+version basica usa simulaciones aleatorias como politica por defecto, mientras
+que la version avanzada reemplaza dicha politica por una red neuronal que estima
+el valor de una posicion. Este planteamiento sigue de forma simplificada la idea
+general de combinar busqueda y aprendizaje que aparece en AlphaGo y
+AlphaZero~\cite{silver2016, silver2017}.
+
+\section{Preliminares}
+
+\subsection{Reglas y representacion}
+
+El tablero se representa como una matriz de tamano \(8 \times 8\). Internamente
+se usa \(1\) para negras, \(-1\) para blancas y \(0\) para casillas vacias. Para
+el dataset se puede exportar tambien la codificacion del enunciado:
+\(0\) vacia, \(1\) blanca y \(2\) negra.
+
+Un movimiento es legal si coloca una ficha en una casilla vacia y captura al
+menos una ficha rival en direccion horizontal, vertical o diagonal. Si un
+jugador no tiene movimientos legales debe pasar. La partida termina cuando el
+tablero esta lleno o cuando ambos jugadores no tienen movimientos legales.
+
+\subsection{Monte Carlo Tree Search y UCT}
+
+MCTS construye un arbol de busqueda de manera incremental. Cada iteracion
+contiene cuatro fases: seleccion, expansion, simulacion y retropropagacion. En
+la fase de seleccion se emplea UCT para equilibrar explotacion y exploracion:
+
+\begin{equation}
+UCT(s,a) = Q(s,a) + c \sqrt{\frac{\ln N(s)}{N(s,a)}}.
+\end{equation}
+
+En esta implementacion se usa una version negamax. Cada nodo almacena el valor
+medio desde la perspectiva del jugador que debe mover en ese nodo. Por tanto,
+cuando el padre selecciona un hijo, interpreta el valor del hijo con signo
+opuesto.
+
+\subsection{Red neuronal de valor}
+
+La red neuronal resuelve una tarea de regresion supervisada. La entrada contiene
+128 atributos: un canal binario para las fichas propias y otro canal binario
+para las fichas rivales. La salida es un numero real en \([-1, 1]\), obtenido con
+una activacion \texttt{tanh}. El valor objetivo es \(+1\) si el jugador activo en
+ese estado gano la partida, \(0\) si empato y \(-1\) si perdio.
+
+\section{Implementacion}
+
+El proyecto se organiza como un paquete Python. El modulo \texttt{game.py}
+implementa las reglas, \texttt{mcts.py} implementa UCT, \texttt{agents.py}
+define los jugadores, \texttt{self\_play.py} genera datasets,
+\texttt{neural.py} entrena la red de valor y \texttt{tournament.py} ejecuta
+comparativas.
+
+\begin{figure}[h]
+\begin{pseudo}*
+\hd{\fn{UCT}}(estado, iteraciones) \\*
+\textbf{Entrada}: estado actual del juego \\
+\textbf{Salida}: movimiento seleccionado \\
+raiz \(\leftarrow\) nuevo nodo con estado \\
+repetir \(iteraciones\) veces \\+
+  nodo \(\leftarrow\) \fn{seleccion\_uct}(raiz) \\
+  si nodo no es terminal entonces \\+
+    nodo \(\leftarrow\) \fn{expandir}(nodo) \\-
+  valor \(\leftarrow\) \fn{evaluar}(nodo.estado) \\
+  \fn{retropropagar}(nodo, valor) \\-
+devolver hijo de raiz con mas visitas
+\end{pseudo}
+\caption{Esquema del algoritmo UCT implementado.}
+\label{pcd:uct}
+\end{figure}
+
+La politica por defecto de la version basica realiza una simulacion aleatoria
+hasta final de partida. La version con red neuronal sustituye esa simulacion por
+una llamada al modelo de valor, reduciendo el coste de evaluacion y guiando la
+busqueda hacia posiciones aprendidas mediante autojuego.
+
+\section{Pruebas y experimentacion}
+
+Se han preparado pruebas unitarias para verificar los movimientos legales
+iniciales, el volteo de fichas, la obligacion de pasar, la deteccion de final de
+partida y la integracion basica de UCT. Estas pruebas se ejecutan con:
+
+\begin{verbatim}
+python3 -m unittest discover -s tests -v
+\end{verbatim}
+
+Los experimentos recomendados para la entrega son:
+
+\begin{enumerate}
+\item Comparar \texttt{random}, \texttt{greedy}, \texttt{heuristic} y
+\texttt{uct:N}.
+\item Medir el efecto del numero de iteraciones UCT.
+\item Generar un dataset por autojuego con UCT.
+\item Entrenar la red neuronal de valor.
+\item Comparar \texttt{uctnn:model:N} contra \texttt{uct:N} y contra los
+baselines.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\caption{Plantilla de resultados para torneos entre agentes.}
+\label{tab:torneos}
+\begin{tabular}{lrrrr}
+\toprule
+Agente A & Agente B & Victorias A & Empates & Dif. media \\
+\midrule
+UCT-100 & Greedy & -- & -- & -- \\
+UCTNN-100 & UCT-100 & -- & -- & -- \\
+UCTNN-100 & Random & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Conclusiones}
+
+El proyecto implementa el pipeline completo solicitado para la convocatoria de
+junio: reglas de Otelo, UCT, generacion de estados por autojuego, entrenamiento
+de una red neuronal y uso de esa red como evaluador dentro de la busqueda. La
+principal ventaja del enfoque es que separa claramente el motor del juego, la
+busqueda y el aprendizaje, lo que facilita la defensa y la realizacion de
+experimentos.
+
+Como trabajo futuro se propone aumentar el numero de partidas de entrenamiento,
+comparar distintas arquitecturas de red, ajustar la constante de exploracion de
+UCT y realizar reentrenamiento iterativo. Tambien seria posible aprender una
+politica de movimientos ademas de la funcion de valor.
+
+\section*{Uso de IA generativa}
+
+Se utilizo Codex, basado en GPT-5, para leer el enunciado, proponer la
+arquitectura, generar una primera version del codigo, preparar pruebas y crear
+esta documentacion inicial. Los prompts principales fueron: ``Lee el pdf y dime
+como crees que se podria hacer el mejor proyecto posible'' y ``Ejecutalo''. El
+codigo y los resultados deben ser revisados y entendidos por todos los
+integrantes antes de la defensa.
+
+\begin{thebibliography}{00}
+\bibitem{russell2020} S. Russell and P. Norvig, \emph{Artificial Intelligence:
+A Modern Approach}, 4th ed. Pearson, 2020.
+\bibitem{browne2012} C. B. Browne et al., ``A survey of Monte Carlo Tree Search
+methods,'' \emph{IEEE Transactions on Computational Intelligence and AI in
+Games}, vol. 4, no. 1, pp. 1--43, 2012.
+\bibitem{silver2016} D. Silver et al., ``Mastering the game of Go with deep
+neural networks and tree search,'' \emph{Nature}, vol. 529, pp. 484--489, 2016.
+\bibitem{silver2017} D. Silver et al., ``Mastering Chess and Shogi by self-play
+with a general reinforcement learning algorithm,'' arXiv:1712.01815, 2017.
+\end{thebibliography}
+
+\end{document}
