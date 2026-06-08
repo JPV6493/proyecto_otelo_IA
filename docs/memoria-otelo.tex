@@ -641,10 +641,9 @@ del evaluador neuronal. Aún así, el experimento es suficiente para comprobar e
 requisito principal de la convocatoria: diseñar una red, entrenarla con estados
 de Otelo y usarla dentro de MCTS como reemplazo de la política por defecto.
 
-\subsection{Uso durante la defensa}
+\subsection{Uso del proyecto}
 
-El proyecto está preparado para poder mostrar tres tipos de ejecución durante la
-defensa. La primera es una partida interactiva contra la máquina usando la
+El proyecto está preparado para poder mostrar tres tipos de ejecución. La primera es una partida interactiva contra la máquina usando la
 interfaz de texto. Esta ejecución permite comprobar que el motor aplica las
 reglas correctamente y que el agente devuelve movimientos legales. La segunda es
 un torneo corto entre dos agentes, útil para mostrar cómo se comparan los
@@ -652,29 +651,13 @@ jugadores sin intervención humana. La tercera es la ejecución del script de
 experimentos, que reproduce el pipeline completo de generación de datos,
 entrenamiento y evaluación.
 
-Estas ejecuciones también ayudan a responder preguntas técnicas. Si se pregunta
-dónde se sustituye la política por defecto, la respuesta está en el parámetro
-\texttt{evaluator} de UCT. Si se pregunta qué contiene el modelo, se puede
-mostrar que el archivo guarda únicamente matrices de pesos y vectores de sesgos.
-Si se pregunta cómo se etiqueta un estado, se puede explicar que la etiqueta se
-asigna al finalizar la partida, según el resultado desde la perspectiva del
-jugador activo en ese estado.
-
-Una modificación sencilla que podría pedirse en directo es cambiar el número de
-iteraciones de UCT o enfrentar otros agentes. El diseño por argumentos de línea
-de comandos permite hacerlo sin tocar el código. Otra modificación posible es
-entrenar una red con más épocas o con otro tamaño de capas ocultas. Estos
-parámetros también están expuestos en los scripts, de modo que el trabajo no
-depende de valores fijados de forma rígida en el código.
-
 \section{Conclusiones}
 
 El proyecto implementa el pipeline completo solicitado para la convocatoria de
 junio: reglas de Otelo, UCT, generación de estados por autojuego, entrenamiento
 de una red neuronal y uso de esa red como evaluador dentro de la búsqueda. La
 principal ventaja del enfoque es que separa claramente el motor del juego, la
-búsqueda y el aprendizaje, lo que facilita la defensa y la realización de
-experimentos.
+búsqueda y el aprendizaje.
 
 Los resultados muestran que UCT es una mejora sólida sobre los baselines simples
 y que la red neuronal aprende una función de valor con información útil. Con el

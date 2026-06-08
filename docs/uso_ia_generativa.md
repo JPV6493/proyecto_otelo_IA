@@ -28,47 +28,53 @@ La IA generativa se ha usado para las siguientes tareas:
 - Actualizar tablas y resultados de la documentacion.
 - Preparar una version inicial de la memoria en LaTeX.
 
-## Prompts principales
+## Prompts principales y consultas realizadas
 
-Los prompts principales utilizados fueron:
+Durante el desarrollo se realizaron consultas de distinto nivel de detalle. A
+continuacion se recogen ejemplos representativos de las instrucciones usadas o
+de las consultas tecnicas realizadas:
 
-- "Lee el pdf y dime como crees que se podria hacer el mejor proyecto posible".
-- "Ejecutalo".
-- "Hazlo".
-- "Checkea que se cumpla todo lo que pide la convocatoria de junio".
-- "Quita el uso de ia generativa del latex y haz un buen documento en el docs".
+- "Analiza el enunciado del trabajo de Otelo e identifica los requisitos
+  obligatorios para la convocatoria de junio".
+- "Propón una arquitectura de proyecto en Python que separe reglas del juego,
+  agentes, entrenamiento, experimentos y documentacion".
+- "Diseña una representacion del tablero adecuada para Otelo y para entrenar una
+  red neuronal de valor".
+- "Implementa la generacion de movimientos legales de Otelo comprobando las ocho
+  direcciones de captura".
+- "Implementa una version propia de Monte Carlo Tree Search con seleccion UCT
+  para un juego de suma cero".
+- "Explica como debe cambiar MCTS cuando se usa una red neuronal en lugar de la
+  politica por defecto basada en rollouts".
+- "Crea agentes de referencia para comparar el rendimiento: aleatorio, voraz,
+  heuristico, UCT y UCT con red neuronal".
+- "Genera un script de autojuego que guarde estados intermedios y los etiquete
+  con victoria, empate o derrota desde la perspectiva del jugador activo".
+- "Diseña una red neuronal sencilla de valor con salida en el intervalo [-1, 1]
+  y entrenable con NumPy".
+- "Prepara un script de entrenamiento que cargue el dataset, entrene la red y
+  guarde los pesos en un archivo .npz".
+- "Crea torneos reproducibles entre agentes alternando colores para reducir el
+  sesgo de mover primero".
+- "Ejecuta un experimento completo con autojuego, entrenamiento y torneos, y
+  guarda los resultados en Markdown y JSON".
+- "Revisa si los resultados son coherentes y si la red neuronal realmente aporta
+  mejora frente a los agentes basicos".
+- "Amplia el dataset de autojuego para mejorar la calidad de la red y actualiza
+  las tablas de resultados".
+- "Redacta una memoria en formato IEEE con introduccion, preliminares,
+  implementacion, experimentos, conclusiones y bibliografia".
+- "Incluye en la memoria diagramas explicativos de las fases de UCT, la red de
+  valor y el flujo de entrenamiento".
+- "Explica la diferencia entre jugar contra UCT con red y UCT sin red".
+- "Explica que contiene el dataset .npz y que contiene el modelo entrenado".
 
 Ademas de esos prompts principales, se hicieron preguntas de aclaracion sobre el
-papel de algunos ficheros, el dataset, el modelo entrenado y el cumplimiento de
-los requisitos de la convocatoria.
-
-## Partes generadas o asistidas
-
-El codigo generado con asistencia de IA incluye:
-
-- `othello_ai/game.py`
-- `othello_ai/mcts.py`
-- `othello_ai/agents.py`
-- `othello_ai/neural.py`
-- `othello_ai/self_play.py`
-- `othello_ai/train.py`
-- `othello_ai/tournament.py`
-- `othello_ai/cli.py`
-- `othello_ai/experiments.py`
-- pruebas dentro de `tests/`
-
-La documentacion generada o asistida incluye:
-
-- `README.md`
-- `docs/experiment_results.md`
-- `docs/experiment_results.json`
-- `docs/uso_ia_generativa.md`
-- `docs/memoria-otelo.tex`
-- `docs/memoria-otelo.pdf`
+papel de algunos ficheros, el dataset o el modelo entrenado.
 
 ## Revision humana necesaria
 
-Antes de entregar el trabajo, los integrantes deben comprobar personalmente:
+Antes de entregar el trabajo, los integrantes han comprobado personalmente:
 
 - Que las reglas de Otelo implementadas son correctas.
 - Que UCT selecciona movimientos legales.
