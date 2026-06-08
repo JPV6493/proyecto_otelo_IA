@@ -3,34 +3,34 @@
 Resultados generados automaticamente con:
 
 ```bash
-python3 -m othello_ai.experiments --selfplay-games 12 --selfplay-agent uct:12 --epochs 20 --tournament-games 8 --uct-iters 16 --seed 23
+python3 -m othello_ai.experiments --selfplay-games 50 --selfplay-agent uct:12 --epochs 35 --tournament-games 12 --uct-iters 16 --seed 23
 ```
 
 ## Dataset
 
-- Partidas de autojuego: 12
+- Partidas de autojuego: 50
 - Agente de autojuego: `uct:12`
-- Ejemplos tras simetrias: 5720
+- Ejemplos tras simetrias: 23792
 - Fichero: `data/processed/selfplay_experiment.npz`
 
 ## Entrenamiento
 
 - Modelo: `models/value_net_experiment.npz`
 - Capas ocultas: `(64, 32)`
-- Epocas: 20
-- Loss entrenamiento final: 0.84350
-- Loss validacion final: 0.87669
+- Epocas: 35
+- Loss entrenamiento final: 0.79606
+- Loss validacion final: 0.80524
 
 ## Torneos
 
 | Agente A | Agente B | Partidas | Victorias A | Victorias B | Empates | Dif. media A | Tiempo (s) |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| `greedy` | `random` | 8 | 5 | 3 | 0 | 7.50 | 0.2 |
-| `heuristic` | `greedy` | 8 | 7 | 1 | 0 | 18.00 | 0.7 |
-| `uct:16` | `greedy` | 8 | 6 | 2 | 0 | 9.00 | 24.4 |
-| `uct:32` | `uct:16` | 8 | 4 | 3 | 1 | 6.00 | 73.1 |
-| `uctnn:models/value_net_experiment.npz:16` | `random` | 8 | 7 | 1 | 0 | 13.00 | 1.6 |
-| `uctnn:models/value_net_experiment.npz:16` | `greedy` | 8 | 3 | 4 | 1 | -6.75 | 1.7 |
-| `uctnn:models/value_net_experiment.npz:16` | `uct:16` | 8 | 4 | 4 | 0 | -0.25 | 26.0 |
+| `greedy` | `random` | 12 | 9 | 3 | 0 | 8.83 | 0.3 |
+| `heuristic` | `greedy` | 12 | 11 | 1 | 0 | 24.92 | 1.1 |
+| `uct:16` | `greedy` | 12 | 8 | 4 | 0 | 6.00 | 36.4 |
+| `uct:32` | `uct:16` | 12 | 7 | 4 | 1 | 9.33 | 109.3 |
+| `uctnn:models/value_net_experiment.npz:16` | `random` | 12 | 11 | 0 | 1 | 17.33 | 2.5 |
+| `uctnn:models/value_net_experiment.npz:16` | `greedy` | 12 | 9 | 3 | 0 | 9.50 | 2.5 |
+| `uctnn:models/value_net_experiment.npz:16` | `uct:16` | 12 | 10 | 2 | 0 | 13.33 | 38.5 |
 
 Nota: las partidas alternan el color inicial para reducir el sesgo de mover primero.

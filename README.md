@@ -16,7 +16,9 @@ autojuego.
 - `othello_ai/tournament.py`: comparativas entre agentes.
 - `othello_ai/cli.py`: interfaz de texto para jugar contra la maquina.
 - `tests/`: pruebas unitarias con `unittest`.
-- `plantilla-trabajo/memoria-otelo.tex`: borrador IEEE de la memoria.
+- `docs/memoria-otelo.tex`: memoria IEEE del trabajo.
+- `docs/memoria-otelo.pdf`: memoria compilada.
+- `docs/uso_ia_generativa.md`: declaracion separada sobre uso de IA generativa.
 
 ## Requisitos
 
@@ -30,6 +32,21 @@ python3 -m pip install -r requirements.txt
 
 ```bash
 python3 -m unittest discover -s tests -v
+```
+
+## Documentacion
+
+La memoria final esta en `docs/`:
+
+- `docs/memoria-otelo.tex`
+- `docs/memoria-otelo.pdf`
+- `docs/IEEEtran.cls`
+
+Para recompilarla:
+
+```bash
+cd docs
+tectonic memoria-otelo.tex
 ```
 
 ## Jugar contra la maquina
@@ -89,17 +106,17 @@ solo paso:
 
 ```bash
 python3 -m othello_ai.experiments \
-  --selfplay-games 12 \
+  --selfplay-games 50 \
   --selfplay-agent uct:12 \
-  --epochs 20 \
-  --tournament-games 8 \
+  --epochs 35 \
+  --tournament-games 12 \
   --uct-iters 16 \
   --seed 23
 ```
 
 La ejecucion validada genero:
 
-- `data/processed/selfplay_experiment.npz`: 5.720 ejemplos.
+- `data/processed/selfplay_experiment.npz`: 23.792 ejemplos.
 - `models/value_net_experiment.npz`: modelo de valor entrenado.
 - `docs/experiment_results.md`: resumen de resultados.
 - `docs/experiment_results.json`: resultados estructurados.
@@ -108,14 +125,13 @@ Resumen de resultados obtenidos:
 
 | Agente A | Agente B | Partidas | Victorias A | Victorias B | Empates | Dif. media A |
 |---|---:|---:|---:|---:|---:|---:|
-| `greedy` | `random` | 8 | 5 | 3 | 0 | 7.50 |
-| `heuristic` | `greedy` | 8 | 7 | 1 | 0 | 18.00 |
-| `uct:16` | `greedy` | 8 | 6 | 2 | 0 | 9.00 |
-| `uct:32` | `uct:16` | 8 | 4 | 3 | 1 | 6.00 |
-| `uctnn:...:16` | `random` | 8 | 7 | 1 | 0 | 13.00 |
-| `uctnn:...:16` | `greedy` | 8 | 3 | 4 | 1 | -6.75 |
-| `uctnn:...:16` | `uct:16` | 8 | 4 | 4 | 0 | -0.25 |
+| `greedy` | `random` | 12 | 9 | 3 | 0 | 8.83 |
+| `heuristic` | `greedy` | 12 | 11 | 1 | 0 | 24.92 |
+| `uct:16` | `greedy` | 12 | 8 | 4 | 0 | 6.00 |
+| `uct:32` | `uct:16` | 12 | 7 | 4 | 1 | 9.33 |
+| `uctnn:...:16` | `random` | 12 | 11 | 0 | 1 | 17.33 |
+| `uctnn:...:16` | `greedy` | 12 | 9 | 3 | 0 | 9.50 |
+| `uctnn:...:16` | `uct:16` | 12 | 10 | 2 | 0 | 13.33 |
 
-Estos numeros sirven como experimento inicial defendible. Para una entrega final
-mas fuerte, conviene repetir el mismo script con mas partidas y mas iteraciones
-si se dispone de tiempo de computo.
+Estos numeros muestran que la ampliacion del dataset mejora claramente al agente
+neuronal: UCTNN-16 supera a `random`, `greedy` y `uct:16` en esta ejecucion.
