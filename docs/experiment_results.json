@@ -1,0 +1,139 @@
+{
+  "command": "python3 -m othello_ai.experiments --selfplay-games 12 --selfplay-agent uct:12 --epochs 20 --tournament-games 8 --uct-iters 16 --seed 23",
+  "dataset": {
+    "games": 12,
+    "agent": "uct:12",
+    "examples": 5720,
+    "path": "data/processed/selfplay_experiment.npz",
+    "label_mean": 0.0097902100533247,
+    "label_std": 0.9999520778656006
+  },
+  "training": {
+    "model_path": "models/value_net_experiment.npz",
+    "hidden_sizes": [
+      64,
+      32
+    ],
+    "epochs": 20,
+    "batch_size": 128,
+    "learning_rate": 0.003,
+    "final_train_loss": 0.8435025215148926,
+    "final_val_loss": 0.8766868114471436,
+    "train_loss": [
+      1.039498209953308,
+      1.0134416818618774,
+      0.9937159419059753,
+      0.9774016737937927,
+      0.9633527994155884,
+      0.9510497450828552,
+      0.9396405220031738,
+      0.9294461607933044,
+      0.9199429750442505,
+      0.9117006063461304,
+      0.90285724401474,
+      0.8951458930969238,
+      0.8875830173492432,
+      0.880571722984314,
+      0.8738569021224976,
+      0.8671355843544006,
+      0.8621532320976257,
+      0.8548746109008789,
+      0.849072277545929,
+      0.8435025215148926
+    ],
+    "val_loss": [
+      1.032804012298584,
+      1.0123791694641113,
+      0.9968434572219849,
+      0.9831976890563965,
+      0.9722256064414978,
+      0.9608524441719055,
+      0.9527425765991211,
+      0.9447275400161743,
+      0.9363948106765747,
+      0.9312401413917542,
+      0.923249363899231,
+      0.9173938035964966,
+      0.9103018045425415,
+      0.905565083026886,
+      0.8991000652313232,
+      0.8946176171302795,
+      0.8923638463020325,
+      0.8852760791778564,
+      0.8803709745407104,
+      0.8766868114471436
+    ]
+  },
+  "tournaments": [
+    {
+      "agent_a": "greedy",
+      "agent_b": "random",
+      "games": 8,
+      "wins_a": 5,
+      "wins_b": 3,
+      "draws": 0,
+      "avg_disc_diff_a": 7.5,
+      "seconds": 0.20287658400047803
+    },
+    {
+      "agent_a": "heuristic",
+      "agent_b": "greedy",
+      "games": 8,
+      "wins_a": 7,
+      "wins_b": 1,
+      "draws": 0,
+      "avg_disc_diff_a": 18.0,
+      "seconds": 0.6952836249984102
+    },
+    {
+      "agent_a": "uct:16",
+      "agent_b": "greedy",
+      "games": 8,
+      "wins_a": 6,
+      "wins_b": 2,
+      "draws": 0,
+      "avg_disc_diff_a": 9.0,
+      "seconds": 24.358017957998527
+    },
+    {
+      "agent_a": "uct:32",
+      "agent_b": "uct:16",
+      "games": 8,
+      "wins_a": 4,
+      "wins_b": 3,
+      "draws": 1,
+      "avg_disc_diff_a": 6.0,
+      "seconds": 73.05129750000197
+    },
+    {
+      "agent_a": "uctnn:models/value_net_experiment.npz:16",
+      "agent_b": "random",
+      "games": 8,
+      "wins_a": 7,
+      "wins_b": 1,
+      "draws": 0,
+      "avg_disc_diff_a": 13.0,
+      "seconds": 1.648602375000337
+    },
+    {
+      "agent_a": "uctnn:models/value_net_experiment.npz:16",
+      "agent_b": "greedy",
+      "games": 8,
+      "wins_a": 3,
+      "wins_b": 4,
+      "draws": 1,
+      "avg_disc_diff_a": -6.75,
+      "seconds": 1.6925005829980364
+    },
+    {
+      "agent_a": "uctnn:models/value_net_experiment.npz:16",
+      "agent_b": "uct:16",
+      "games": 8,
+      "wins_a": 4,
+      "wins_b": 4,
+      "draws": 0,
+      "avg_disc_diff_a": -0.25,
+      "seconds": 26.042285542000172
+    }
+  ]
+}

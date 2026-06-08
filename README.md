@@ -82,15 +82,40 @@ python3 -m othello_ai.tournament --agent-a uctnn:models/value_net_uct80_500.npz:
 Los jugadores alternan color en cada partida para evitar sesgos por mover
 primero.
 
-## Experimento rapido ya validado
+## Experimento reproducible
 
-Durante la preparacion se comprobo el flujo completo con comandos cortos:
+Para generar un dataset, entrenar la red y ejecutar una liga de agentes en un
+solo paso:
 
 ```bash
-python3 -m othello_ai.self_play --games 2 --agent uct:8 --output data/processed/demo_selfplay.npz --seed 3
-python3 -m othello_ai.train --dataset data/processed/demo_selfplay.npz --output models/demo_value_net.npz --hidden 32 --epochs 3 --batch-size 32 --lr 0.01 --seed 4
-python3 -m othello_ai.tournament --agent-a uctnn:models/demo_value_net.npz:8 --agent-b random --games 2 --seed 9
+python3 -m othello_ai.experiments \
+  --selfplay-games 12 \
+  --selfplay-agent uct:12 \
+  --epochs 20 \
+  --tournament-games 8 \
+  --uct-iters 16 \
+  --seed 23
 ```
 
-Ese experimento solo verifica que el pipeline funciona. Para la memoria conviene
-generar datasets y torneos mas grandes.
+La ejecucion validada genero:
+
+- `data/processed/selfplay_experiment.npz`: 5.720 ejemplos.
+- `models/value_net_experiment.npz`: modelo de valor entrenado.
+- `docs/experiment_results.md`: resumen de resultados.
+- `docs/experiment_results.json`: resultados estructurados.
+
+Resumen de resultados obtenidos:
+
+| Agente A | Agente B | Partidas | Victorias A | Victorias B | Empates | Dif. media A |
+|---|---:|---:|---:|---:|---:|---:|
+| `greedy` | `random` | 8 | 5 | 3 | 0 | 7.50 |
+| `heuristic` | `greedy` | 8 | 7 | 1 | 0 | 18.00 |
+| `uct:16` | `greedy` | 8 | 6 | 2 | 0 | 9.00 |
+| `uct:32` | `uct:16` | 8 | 4 | 3 | 1 | 6.00 |
+| `uctnn:...:16` | `random` | 8 | 7 | 1 | 0 | 13.00 |
+| `uctnn:...:16` | `greedy` | 8 | 3 | 4 | 1 | -6.75 |
+| `uctnn:...:16` | `uct:16` | 8 | 4 | 4 | 0 | -0.25 |
+
+Estos numeros sirven como experimento inicial defendible. Para una entrega final
+mas fuerte, conviene repetir el mismo script con mas partidas y mas iteraciones
+si se dispone de tiempo de computo.

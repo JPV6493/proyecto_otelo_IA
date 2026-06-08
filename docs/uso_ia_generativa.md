@@ -14,11 +14,14 @@ Uso realizado:
 - Generacion asistida de codigo Python para reglas de Otelo, UCT, red neuronal
   de valor, scripts de entrenamiento y experimentacion.
 - Generacion asistida de pruebas unitarias y documentacion inicial.
+- Ejecucion asistida de experimentos reproducibles y actualizacion de la memoria
+  con resultados.
 
 Prompts principales:
 
 - "Lee el pdf y dime como crees que se podria hacer el mejor proyecto posible".
 - "Ejecutalo".
+- "Hazlo".
 
 Revision humana necesaria:
 
